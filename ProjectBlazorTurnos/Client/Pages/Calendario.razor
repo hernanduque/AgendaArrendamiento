@@ -1,0 +1,440 @@
+﻿@page "/Calendario/{strcedulacliente}/{stremailcliente}"
+@inject NavigationManager NavigationManager
+@inject IlistaServicio ListaServicio
+@inject IgrabarClienteServicio grabarClienteServicio
+
+@*<Layout>
+
+
+    <LayoutHeader>*@
+<div class="text-center">
+    <h5>Los campos señalados con asterico <font color="red">(*)</font> son obligatorios</h5>
+</div>
+@*    </LayoutHeader>*@
+
+@*  <LayoutContent>*@
+
+<div class="card">
+    <div class="card-body">
+        <div class="container">
+            <fieldset class="border p-2">
+                <legend class="float-none w-auto p-2">
+                    <font color="#dc8f35" ; size="2">
+                        <b>INFORMACIÓN DE CITAS</b>
+                    </font>
+                </legend>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-12 mb-3">
+
+                            <FieldLabel><font color="red">(*)</font>Lugar de Atencion</FieldLabel>
+
+                            @*<select @bind="@Models_Clientes_Cita.STRCODIGOLUGARATENCION" @onchange="@listaAsesor()" class="custom-select" title="Seleccion es requerida" required>*@
+
+                            <select value=@Models_Clientes_Cita.STRCODIGOLUGARATENCION onchange=@listaAsesor class="custom-select" title="Seleccion es requerida" required>
+                                <option value="Select">Selecione un lugar de atencion</option>
+
+                                @if (ModelsLugarAtencionX != null && ModelsLugarAtencionX.Count > 0)
+                                {
+
+                                    @foreach (var dato in ModelsLugarAtencionX)
+                                    {
+                                        <option value="@dato.STRCODIGO"> @dato.STRLUGARATENCION</option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <FieldLabel><font color="red">(*)</font>Asesor de Atencion</FieldLabel>
+
+                            <select value=@Models_Clientes_Cita.STRCODIGOASESORASIGNADO onchange=@EventCodigoAsesor class="custom-select" title="Seleccion es requerida" required>
+                                <option value="Select" selected>Selecione un asesor de atencion</option>
+
+                                @if (MODELS_ASESOR_LUGARES != null && MODELS_ASESOR_LUGARES.Count > 0)
+                                {
+
+                                    @foreach (var dato in MODELS_ASESOR_LUGARES)
+                                    {
+                                        <option value="@dato.STRCODIGOASESOR"> @dato.STRNOMBREASESOR</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <FieldLabel><font color="red">(*)</font>Seleccione fecha de la cita</FieldLabel>
+                            <FieldBody>
+                                <DatePicker onchange=@ValidarFecha TValue="DateTime?" Placeholder="YYYY/MM/DD" required />
+                            </FieldBody>
+                            <FieldHelp>Formato: YYYY/MM/DD</FieldHelp>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3 ">
+                        <style>
+                            .table-wrapper {
+                                max-height: 265px;
+                                overflow: auto;
+                                display: inline-block;
+                            }
+                        </style>
+
+                        <table class="table table-wrapper">
+                            <thead>
+                                <tr>
+                                    <th><font size="1">HORAS(FORMATOS 24 HORAS)</font></th>
+                                    <th align="center"><font size="1">LUGAR DE ATENCION</font></th>
+                                    <th><font size="1">ASESOR ATENCION</font></th>
+
+                                    @if (@fecha == string.Empty)
+                                    {
+                                        <th align="center"><font size="1">FECHA CITA</font></th>
+                                    }
+                                    else
+                                    {
+                                        <th align="center"><font size="1">FECHA CITA<br>@fecha</font></th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Models_OcupacionX != null && Models_OcupacionX.Count > 0)
+                                {
+                                    @foreach (var datos in Models_OcupacionX)
+                                    {
+                                        <tr>
+                                            <td><font size="1">@datos.strhorario</font></td>
+                                            <td><font size="1">@StrSede</font></td>
+                                            <td><font size="1">@nombreasesor</font></td>
+                                            <td><font size="1"><RadzenButton Click="@(args => Grabar(datos.strcodigohorario))" data-toggle="tooltip" title="Esta opcion te permite Asignar Cita" class="btn btn-primary btn-sm" Style="background:orange" Text="Asignar" ButtonStyle="ButtonStyle.Primary" /></font></td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-5 mb-3">
+                        <RadzenButton Click="@(args => listaServicio())" data-toggle="tooltip" title="Esta opcion te permite solicitar una cita para poner PQRS!" class="btn btn-primary" Style="background:orange" Text="Consultar Disponibilidad" ButtonStyle="ButtonStyle.Primary" />
+                        <RadzenButton Click="@(args => NavigateCancelar())" data-toggle="tooltip" title="Esta opcion te permite regresar sin guardar" class="btn btn-secondary" Style="background:orange" Text="Retornar" ButtonStyle="ButtonStyle.Secondary" />
+                    </div>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+<Modal @ref="modalvalidar">
+    <ModalContent Size="ModalSize.Large" Centered="true" Scrollable="true">
+        <ModalHeader>
+            <ModalTitle>
+                Validacion Fechas
+            </ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <br />
+            <p>
+                Señor Usuario tenga presenta las siguientes observaciones  <br /><br />
+
+                *La fecha no puede ser menor a la fecha actual. <br />
+                *Los dias Sabados, Domingos y feriados no se presta servicio.
+            </p>
+        </ModalBody>
+        <ModalFooter>
+            @*<button type="submit" class="btn btn-success">Submit</button>*@
+            <Button Color="Color.Secondary" Clicked="@NoAceptar">Cerrar Ventana</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="modalconfirmacion">
+    <ModalContent Size="ModalSize.Large" Centered="true" Scrollable="true">
+        <ModalHeader>
+            <ModalTitle>
+                Confirmacion reserva cita de atencion PQRS emvarias.
+            </ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <br />
+            <p>
+                Señor Usuario Recuerde estar 15 Minutos antes:  <br /><br />
+
+                *Fecha de la Reserva: @fecha<br />
+                *Hora de la Reserva:  @strhorareserva<br />
+                *Lugar de la Reserva: @StrSede<br />
+                *Asesor:              @nombreasesor <br /><br />
+                *Codigo Reserva       @STRCODIGORESERVA <br /><br />
+
+                A su correo le llegara esta misma confirmacion, Gracias por usar nuestros servicios.
+
+            </p>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@CerrarConfirmacion">Aceptar</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="modalcirculo">
+    <ModalContent Size="ModalSize.Small" Centered="true">
+        <button class="btn btn-primary text-nowrap" type="button">
+            <span class="spinner-border spinner-border-sm mr-2"></span>
+            Enviando datos...
+        </button>
+        @*<div class="spinner-border text-danger">
+            <div>Procesando!!</div>
+        </div>*@
+    </ModalContent>
+    @*<ModalContent Size="ModalSize.Small" Centered="true">
+    <ModalHeader>
+    <ModalTitle>
+    Validacion Fechas
+    </ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+    <div class="spinner-border text-danger">
+    <div>Procesando Informacion!!</div>
+    </div>
+    </ModalBody>
+    <ModalFooter>
+    <button type="submit" class="btn btn-success">Submit</button>
+    <Button Color="Color.Secondary" Clicked="@NoAceptar">Cerrar Ventana</Button>
+    </ModalFooter>
+    </ModalContent>*@
+</Modal>
+
+<Modal @ref="modalerror">
+    <ModalContent Size="ModalSize.Small" Centered="true">
+        <button class="btn btn-primary text-nowrap" type="button">
+            <span class="spinner-border spinner-border-sm mr-2"></span>
+            @error
+        </button>
+       
+    </ModalContent>
+    
+</Modal>
+
+@*  </LayoutContent>*@
+
+@* <LayoutFooter>
+    Footer
+    </LayoutFooter>*@
+@*</Layout>*@
+
+@code {
+    string error;
+
+    [Parameter]
+    public string strcedulacliente { get; set; }
+
+    [Parameter]
+    public string stremailcliente { get; set; }
+
+    string STRCODIGORESERVA = string.Empty;
+
+    string nombreasesor = string.Empty;
+
+    string strcodigosede = string.Empty;
+
+    string codigoasesor = string.Empty;
+
+    string fecha = string.Empty;
+
+    string StrSede = string.Empty;
+
+    string strhorareserva = string.Empty;
+
+    private Modal? modalerror = null!;
+
+    private Modal? modalvalidar = null!;
+
+    private Modal? modalconfirmacion = null!;
+
+    private Modal? modalcirculo = null!;
+
+    private Models_Clientes_Citas? Models_Clientes_Citasx;
+
+    private Models_Clientes_Citas? Models_Clientes_Cita;
+
+    List<ModelsLugarAtencion>? ModelsLugarAtencionX;
+
+    List<MODELS_ASESOR_LUGAR>? MODELS_ASESOR_LUGARES;
+
+    List<Models_Ocupacion>? Models_OcupacionX;
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            await base.OnInitializedAsync();
+
+            Models_Clientes_Cita = new Models_Clientes_Citas();
+
+            ModelsLugarAtencionX = (await ListaServicio.GetAllLugarAtencion()).ToList();
+
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+
+    protected async Task Grabar(string strcodigohorario)
+    {
+        var resultado = Models_OcupacionX.Where(x => x.strcodigohorario == strcodigohorario).ToList();
+
+        Models_Clientes_Citasx = new Models_Clientes_Citas();
+
+        if (resultado != null && resultado.Count > 0)
+        {
+            foreach (var datos in resultado)
+            {
+                strhorareserva = datos.strhorario;
+
+                Models_Clientes_Citasx.STRCEDULA = strcedulacliente;
+                Models_Clientes_Citasx.STRCODIGOLUGARATENCION = strcodigosede;
+                Models_Clientes_Citasx.STRCODIGOASESORASIGNADO = codigoasesor;
+                Models_Clientes_Citasx.STRFECHARESERVA = fecha;
+                Models_Clientes_Citasx.STRHORARESERVA = datos.strcodigohorario;
+                Models_Clientes_Citasx.STRFECHAREALATENCION = string.Empty;
+                Models_Clientes_Citasx.STRHORAREALATENCION = string.Empty;
+                Models_Clientes_Citasx.STRESTADOATENCION = "1"; //este estado es el inicial sin atencion
+
+                var yearsystem = DateTime.Today.Year;
+                var monthsystem = DateTime.Today.Month;
+                var daysystem = DateTime.Today.Day;
+                var hora = DateTime.Now.ToString("h:mm:ss tt");
+                STRCODIGORESERVA = yearsystem.ToString() + monthsystem.ToString() + daysystem.ToString() + hora.Substring(0, 1) + hora.Substring(3, 2) + hora.Substring(6, 2);
+                Models_Clientes_Citasx.STRCODIGORESERVA = STRCODIGORESERVA;
+
+                Models_Clientes_Citasx.fecha = @fecha;
+                Models_Clientes_Citasx.strhorareservax = strhorareserva;
+                Models_Clientes_Citasx.StrSede = StrSede;
+                Models_Clientes_Citasx.nombreasesor = nombreasesor;
+                Models_Clientes_Citasx.stremailcliente = stremailcliente;
+
+            }
+        }
+
+        modalcirculo.Show();
+
+        try
+        {
+            await grabarClienteServicio.GrabarCita(Models_Clientes_Citasx);
+
+            modalcirculo.Hide();
+            modalconfirmacion.Show();
+        }
+        catch (Exception e)
+        {
+            error = e.Message.ToString();
+
+            //modalerror.Show();
+
+        }
+       
+    }
+
+    private void Delete()
+    {
+        NavigationManager.NavigateTo("/Cancelar");
+    }
+
+    private void NavigateCancelar()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    public async Task EventCodigoAsesor(ChangeEventArgs? e)
+    {
+        codigoasesor = e.Value.ToString();
+    }
+
+    public async Task listaAsesor(ChangeEventArgs? e)
+    {
+
+        var resultado = ModelsLugarAtencionX.Where(x => x.STRCODIGO == e.Value.ToString()).ToList();
+
+        @foreach (var LISTA in resultado)
+        {
+            StrSede = LISTA.STRLUGARATENCION;
+        }
+
+        strcodigosede = e.Value.ToString();
+
+        MODELS_ASESOR_LUGARES = new List<MODELS_ASESOR_LUGAR>();
+
+        MODELS_ASESOR_LUGARES = (await ListaServicio.GetAllLAsesorLugar(e.Value.ToString())).ToList();
+    }
+
+    public async Task listaServicio()
+    {
+        Models_OcupacionX = (await ListaServicio.GetAllLOCUPACION(new Models_Parametros() { strcodigoasesor = codigoasesor, strfechareserva = fecha })).ToList();
+
+        if (Models_OcupacionX != null && Models_OcupacionX.Count > 0)
+        {
+            var resultado = MODELS_ASESOR_LUGARES.Where(x => x.STRCODIGOASESOR == codigoasesor.ToString()).ToList();
+
+            foreach (var datos in resultado)
+            {
+                nombreasesor = datos.STRNOMBREASESOR;
+            }
+
+        }
+    }
+
+    public async Task ValidarFecha(ChangeEventArgs? e)
+    {
+
+        if (!string.IsNullOrEmpty(e.Value.ToString()))
+        {
+            byte dia = (byte)Convert.ToDateTime(e.Value).DayOfWeek;
+
+            var yearcontrol = Convert.ToDateTime(e.Value).Year;
+            var monthcontrol = Convert.ToDateTime(e.Value).Month;
+            var daycontrol = Convert.ToDateTime(e.Value).Day;
+
+            var fechacontrol = yearcontrol + "/" + monthcontrol.ToString().PadLeft(2, '0') + "/" + daycontrol.ToString().PadLeft(2, '0');
+            fecha = fechacontrol;
+
+            var yearsystem = DateTime.Today.Year;
+            var monthsystem = DateTime.Today.Month;
+            var daysystem = DateTime.Today.Day;
+
+            var fechasistema = yearsystem + "/" + monthsystem.ToString().PadLeft(2, '0') + "/" + daysystem.ToString().PadLeft(2, '0');
+
+            if ((Convert.ToDateTime(fechacontrol) < Convert.ToDateTime(fechasistema)) || dia == 6 || dia == 0)
+            {
+                modalvalidar.Show();
+            }
+        }
+
+
+
+    }
+
+    private void NoAceptar()
+    {
+        modalvalidar.Hide();
+    }
+
+    private void CerrarConfirmacion()
+    {
+        modalconfirmacion.Hide();
+        NavigationManager.NavigateTo("/");
+    }
+
+
+
+}

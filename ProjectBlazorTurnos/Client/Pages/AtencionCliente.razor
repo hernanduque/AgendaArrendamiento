@@ -1,0 +1,365 @@
+﻿@page "/AtencionCliente"
+
+@inject NavigationManager NavigationManager
+@inject IlistaServicio ListaServicio
+@inject IgrabarClienteServicio grabarClienteServicio
+@inject NavigationManager Navigation
+@*@inject IJSRuntime JsRuntime*@
+@inject TooltipService tooltipService
+
+<div class="text-center">
+    <h5>Los campos señalados con asterico <font color="red">(*)</font> son obligatorios</h5>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="container">
+            <fieldset class="border p-2">
+                <legend class="float-none w-auto p-2">
+                    <font color="#dc8f35" ; size="2">
+                        <b>Atencion Citas</b>
+                    </font>
+                </legend>
+
+                <div class="row">
+                    <div class="col-md-4">
+
+                        <div class="col-md-12 mb-3">
+                            <FieldLabel><font color="red">(*)</font>Numero de Documento</FieldLabel>
+                            <RadzenTextBox @bind-Value="@Models_Clientes_Turno.STRCEDULA" type="password" Style="width: 100%" Placeholder="Digite numero de identificacion" MaxLength="30" class="form-control" required />
+                            @*<RadzenTextBox @bind-Value="@Models_Clientes_Turno.STRCEDULA" Style="width: 100%" Placeholder="Digite numero de identificacion" MaxLength="30" class="form-control" type="number" required />*@
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <FieldLabel><font color="red">(*)</font>Correo Electronico</FieldLabel>
+                            <RadzenTextBox @bind-Value="@Models_Clientes_Turno.STREMAIL" type="email" Placeholder="Digite Correo Electronico" MaxLength="200" class="form-control" required />
+                            @*<RadzenTextBox @bind-Value="@Models_Clientes_Turno.STREMAIL" type="email" Placeholder="Digite Correo Electronico" MaxLength="200" class="form-control" required />*@
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-md-8 mb-3 ">
+
+                        <style>
+                            .table-wrapper {
+                                max-height: 265px;
+                                overflow: auto;
+                                display: inline-block;
+                            }
+                        </style>
+
+                        <table class="table table-wrapper">
+                            <thead>
+                                <tr>
+                                    <th><font size="1">HORAS</font></th>
+                                    <th align="center"><font size="1">SEDE</font></th>
+                                    <th><font size="1">ASESOR</font></th>
+                                    <th align="center"><font size="1">FECHA CITA</font></th>
+                                    @*<th align="center"><font size="1">CANCELAR</font></th>*@
+                                    <th align="center"><font size="1"></font></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ModelsCancelacionesX != null && ModelsCancelacionesX.Count > 0)
+                                {
+                                    @foreach (var datos in ModelsCancelacionesX)
+                                    {
+                                        <tr>
+                                            @*<td data-toggle="tooltip" title=@datos.STRNOMBRECLIENTE><font size="1">@datos.STRHORARIO</font></td>*@
+                                            
+                                            <td data-bs-toggle="tooltip" data-placement="top"  title=@datos.STRNOMBRECLIENTE>
+                                                <font size="1">@datos.STRHORARIO</font>
+                                            </td>
+                                            <td data-toggle="tooltip" title=@datos.STRNOMBRECLIENTE><font size="1">@datos.STRSEDE</font></td>
+                                            <td data-toggle="tooltip" title=@datos.STRNOMBRECLIENTE><font size="1">@datos.STRASESOR</font></td>
+                                            <td data-toggle="tooltip" title=@datos.STRNOMBRECLIENTE><font size="1">@datos.STRFECHARESERVA</font></td>
+
+                                            <td>
+                                                <RadzenButton  Style="border-color:transparent;background-color:transparent" Click="@(args => ValidarActualizacionCliente(datos.STRCODIGORESERVA))" data-toggle="tooltip" title="Esta opcion te permite Aceptar una Cita">
+                                                    <img Style="height:25px" src="check.png" alt="Aceptar Turno" />
+                                                </RadzenButton>
+
+                                                <RadzenButton Style="border-color:transparent;background-color:transparent" Click="@(args => ValidarAnulacionCliente(datos.STRCODIGORESERVA))" data-toggle="tooltip" title="Esta opcion te permite Cancelar una Cita">
+                                                    <img Style="height:25px" src="Delete.png" alt="Cancelar Turno" />
+                                                </RadzenButton>
+                                            </td>
+
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-5 mb-3">
+                        @*<RadzenButton Click="@(args => Consultar())" data-toggle="tooltip" title="Esta opcion te permite consultar las reservas activas!" class="btn btn-primary" Style="background:orange" Text="Consultar" ButtonStyle="ButtonStyle.Primary" />*@
+                        <RadzenButton Click="@(args => Cerrar())" data-toggle="tooltip" title="Esta opcion te permite Salir del sistema" class="btn btn-primary" Style="background:orange" Text="Salir del sistema" ButtonStyle="ButtonStyle.Secondary" />
+                    </div>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+
+<Modal @ref="modalconfirmacioneliminar">
+    <ModalContent Size="ModalSize.Large" Centered="true" Scrollable="true">
+        <ModalHeader>
+            <ModalTitle>
+                Sistema de Atencion de citas PQRS emvarias.
+            </ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <br />
+            <p>
+                Señor Usuario:
+                <br /><br />
+                Su nit y el Email debe ser el asignado por el administrador del sistema, si no lo recuerda debe contactar<br />al administrador del sistema.
+            </p>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@CerrarModal">Cerrar</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="modalatencion">
+    <ModalContent Size="ModalSize.Large" Centered="true" Scrollable="true">
+        <ModalHeader>
+            <ModalTitle>
+                Sistema de Atencion de citas PQRS emvarias.
+            </ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <br />
+            <p>
+                Señor Usuario:
+                <br /><br />
+                <img src="check.png" style="width: 50px"><img>
+                Esta usted seguro de que el cliente se encuentra presente para ser atendido?
+            </p>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="@ActualizacionAtencionCliente">Si</Button>
+            <Button Color="Color.Secondary" Clicked="@CerrarModal">No</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="modalAnulacion">
+    <ModalContent Size="ModalSize.Large" Centered="true" Scrollable="true">
+        <ModalHeader>
+            <ModalTitle>
+                Sistema de Atencion de citas PQRS emvarias.
+            </ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <br />
+            <p>
+                Señor Usuario:
+                <br /><br />
+                <img src="Delete.png" style="width: 50px"><img>
+                Esta usted seguro de Cancelar la cita del cliente?
+            </p>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="@ActualizacionAnulacionCliente">Si</Button>
+            <Button Color="Color.Secondary" Clicked="@CerrarModal">No</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+
+
+@code {
+
+
+    private string VarSTRCODIGORESERVA;
+
+    private Modal? modalconfirmacioneliminar = null!;
+
+    private Modal? modalatencion = null!;
+
+    private Modal? modalAnulacion = null!;
+
+    List<ModelsCancelaciones>? ModelsCancelacionesX;
+
+    List<ModelsValidacionCliente>? ModelsValidacionClientes;
+
+
+    private HubConnection? hubConnection;
+    private List<ModelsCancelaciones>? reports;
+    private HubConnection? _reportDataHubConnection;
+
+    private Models_Clientes_Turnos? Models_Clientes_Turno;
+
+       protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Models_Clientes_Turno = new Models_Clientes_Turnos();
+
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/reports"))
+            .Build();
+
+        hubConnection.On<List<ModelsCancelaciones>>("TransferReportData", (data) =>
+        {
+            ModelsCancelacionesX = data;
+            InvokeAsync(StateHasChanged);
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+
+    public bool IsConnected =>
+        hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+
+    private async Task ValidarAnulacionCliente(string STRCODIGORESERVA)
+    {
+        VarSTRCODIGORESERVA = STRCODIGORESERVA;
+
+        if (Models_Clientes_Turno.STRCEDULA == null || Models_Clientes_Turno.STREMAIL == null)
+        {
+            modalconfirmacioneliminar.Show();
+        }
+        else
+        {
+            modalAnulacion.Show();
+        }
+
+
+    }
+
+
+    private async Task ValidarActualizacionCliente(string STRCODIGORESERVA)
+    {
+        VarSTRCODIGORESERVA = STRCODIGORESERVA;
+
+        if (Models_Clientes_Turno.STRCEDULA == null || Models_Clientes_Turno.STREMAIL == null)
+        {
+            modalconfirmacioneliminar.Show();
+        }
+        else
+        {
+            modalatencion.Show();
+        }
+
+        
+    }
+
+    public async Task ActualizacionAnulacionCliente()
+    {
+        CerrarModal();
+        try
+        {
+            ModelsValidacionClientes = (await ListaServicio.GetUser(new Models_Parametros() { strcodigoasesor = Models_Clientes_Turno.STRCEDULA, stremail = Models_Clientes_Turno.STREMAIL })).ToList();
+
+            foreach (var datos in ModelsValidacionClientes)
+            {
+                if (datos.STRCODIGORESERVA == "0")
+                {
+                    modalconfirmacioneliminar.Show();
+                }
+                else
+                {
+                    try
+                    {
+                        await grabarClienteServicio.ActualizacionAtencionCliente(new Models_Parametros()
+                            {
+                                strcodigoasesor = VarSTRCODIGORESERVA,
+                                stremail = "Asesor cancelo la cita del cliente " + Models_Clientes_Turno.STRCEDULA.ToString(),
+                                strfechareserva = "4"
+                            });
+                    }
+                    catch (Exception e)
+                    {
+
+                        throw e;
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+
+            throw e;
+        }
+    }
+
+    public async Task ActualizacionAtencionCliente()
+    {
+        CerrarModal();
+        try
+        {
+            if (!string.IsNullOrEmpty(Models_Clientes_Turno.STRCEDULA) && !string.IsNullOrEmpty(Models_Clientes_Turno.STREMAIL))
+            {
+                ModelsValidacionClientes = (await ListaServicio.GetUser(new Models_Parametros() { strcodigoasesor = Models_Clientes_Turno.STRCEDULA, stremail = Models_Clientes_Turno.STREMAIL })).ToList();
+
+                foreach (var datos in ModelsValidacionClientes)
+                {
+                    if (datos.STRCODIGORESERVA == "0")
+                    {
+                        modalconfirmacioneliminar.Show();
+                    }
+                    else
+                    {
+                        try
+                        {
+                            await grabarClienteServicio.ActualizacionAtencionCliente(new Models_Parametros()
+                                {
+                                    strcodigoasesor = VarSTRCODIGORESERVA,
+                                    stremail = "Atendido por asesor de experiencia " + Models_Clientes_Turno.STRCEDULA.ToString(),
+                                    strfechareserva = "3"
+                                });
+                        }
+                        catch (Exception e)
+                        {
+
+                            throw e;
+                        }
+
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+
+            throw e;
+        }
+
+
+
+    }
+
+    private void Cerrar()
+    {
+    
+        NavigationManager.NavigateTo("https://www.emvarias.com.co/emvarias");
+        //NavigationManager.NavigateTo("/");
+    }
+
+    private void CerrarModal()
+    {
+        modalconfirmacioneliminar.Hide();
+        modalatencion.Hide();
+        modalAnulacion.Hide();
+    }
+
+}

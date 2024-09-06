@@ -1,0 +1,44 @@
+@*<RadzenTemplateForm Data="@contact">*@
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="container">
+                                            <RadzenFieldset>
+                                                <div class="row">
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="">Horas(FORMATO 24 HORAS)</label>
+                                                        @* <RadzenTextBox class="form-control" @bind-Value="@contact.FIRTSNAME">
+                                                        </RadzenTextBox>*@
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="">LUGAR DE ATENCION</label>
+                                                        @*<RadzenTextBox class="form-control" @bind-Value="@contact.LASTNAME">
+                                                        </RadzenTextBox>*@
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="">FECHA</label>
+                                                        <RadzenButton Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="@(args => Delete())" />
+                                                        @*<RadzenTextBox class="form-control" @bind-Value="@contact.LASTNAME">
+                                                        </RadzenTextBox>*@
+                                                    </div>
+                                                </div>
+                                            </RadzenFieldset>
+
+                                            @*<div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    @*<RadzenButton Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="@(args => Delete())" />
+                                                    <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Secondary" Click="@(args => NavigateHome())" />*@
+                                               @* </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                </div>
+                                            </div>*@
+
+                                        </div>
+                                    </div>
+                                </div>
+                                @* </RadzenTemplateForm>*@
