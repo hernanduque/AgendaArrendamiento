@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.9" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.100" />
@@ -18,6 +19,10 @@
     <ProjectReference Include="..\..\Repositorio\Repositorio.csproj" />
     <ProjectReference Include="..\Client\ProjectBlazorTurnos.Client.csproj" />
     <ProjectReference Include="..\Shared\ProjectBlazorTurnos.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Modelos\" />
   </ItemGroup>
 
 

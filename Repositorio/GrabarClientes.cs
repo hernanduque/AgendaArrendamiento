@@ -25,21 +25,14 @@ namespace Repositorio
                 ///var sql = @"Insert into contactos (ID,FIRTSNAME,LASTNAME,PHONE,ADDRESS) values 
                 //(@ID,@FIRTSNAME,@LASTNAME,@PHONE,@ADDRESS)"
 
-                string sql = @"delete from TABLE_CLIENTES_TURNOS where STRCEDULA='" + ClientesTurnos.STRCEDULA + "'";
-               
+                //string sql = @"delete from TABLE_CLIENTES_TURNOS where STRCEDULA='" + ClientesTurnos.STRCEDULA + "'";
+                _dbconnection.Open();          
 
-                //_dbconnection.Open();
-
-                await _dbconnection.ExecuteAsync(sql, new
-                {
-                    ClientesTurnos.STRCEDULA
-                });
-
-
-                sql = @"Insert into TABLE_CLIENTES_TURNOS (STRCEDULA,STRCODIGOTIPOPERSONA,STRCODIGOTIPODOCUMENTO,STRNOMBRES,STRAPELLIDOS,STRTELEFONOFIJO,STRTELEFONOCELULAR,STREMAIL)
+                string sql = @"Insert into TABLE_CLIENTES_TURNOS (STRCEDULA,STRCODIGOTIPOPERSONA,STRCODIGOTIPODOCUMENTO,STRNOMBRES,STRAPELLIDOS,STRTELEFONOFIJO,STRTELEFONOCELULAR,STREMAIL)
                           values 
                           ('" + ClientesTurnos.STRCEDULA + "','" + ClientesTurnos.STRCODIGOTIPOPERSONA + "','" + ClientesTurnos.STRCODIGOTIPODOCUMENTO + "','" + ClientesTurnos.STRNOMBRES + "','" + ClientesTurnos.STRAPELLIDOS + "','" + ClientesTurnos.STRTELEFONOFIJO + "','" + ClientesTurnos.STRTELEFONOCELULAR + "','" + ClientesTurnos.STREMAIL + "')";
 
+                //await _dbconnection.ExecuteAsync(sql, new { ClientesTurnos.STRCEDULA });
 
                 var resulttado = await _dbconnection.ExecuteAsync(sql, new
                 {

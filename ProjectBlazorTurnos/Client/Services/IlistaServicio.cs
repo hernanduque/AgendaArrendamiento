@@ -7,6 +7,7 @@ namespace ProjectBlazorTurnos.Client.Services
 {
     public interface IlistaServicio
     {
+        
         Task<IEnumerable<ModelsTipoPersona>> GetAllTipoPersona();
         Task<IEnumerable<ModelsTipoDocumento>> GetAllTipoDocumento();
 

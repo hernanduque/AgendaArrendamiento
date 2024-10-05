@@ -25,14 +25,14 @@ namespace Repositorio
 
         public async Task<IEnumerable<ModelsTipoPersona>> GetAllTipoPersona()
         {
-            var sql = @"select STRCODIGO,STRTIPOPERSONA from Table_Tipo_Persona ORDER BY STRTIPOPERSONA";
+            var sql = @"select STRCODIGO,STRTIPOPERSONA from TABLE_TIPO_PERSONA ORDER BY STRTIPOPERSONA";
 
             return await _dbconnection.QueryAsync<ModelsTipoPersona>(sql, new { });
         }
 
         public async Task<IEnumerable<ModelsTipoDocumento>> GetAllTipoDocumento()
         {
-            var sql = @"select STRCODIGO,strtipodocumento from Table_Tipo_Documento order by strtipodocumento";
+            var sql = @"select STRCODIGO,STRTIPODOCUMENTO from TABLE_TIPO_DOCUMENTO order by STRTIPODOCUMENTO";
 
             return await _dbconnection.QueryAsync<ModelsTipoDocumento>(sql, new { });
         }
@@ -51,12 +51,12 @@ namespace Repositorio
                         WHERE T2.STRESTADO=1 AND t1.STRCODIGOASERLUGAR='" + strcodigolugar + "'";
 
             return await _dbconnection.QueryAsync<MODELS_ASESOR_LUGAR>(sql, new { });
-        }
+        } 
 
 
         public async Task<IEnumerable<Models_Ocupacion>> GetAllLOCUPACION(Models_Parametros objparametros)
         {
-            var sql = @"SELECT s.*  FROM Table_Horarios s  WHERE NOT EXISTS (SELECT * FROM table_asesor_horario a 
+            var sql = @"SELECT s.*  FROM Table_Horarios s  WHERE NOT EXISTS (SELECT * FROM TABLE_ASESOR_HORARIO a 
                       WHERE s.strcodigohorario = a.strcodigohorario and a.strcodigoasesor='" + objparametros.strcodigoasesor + "' AND a.STRESTADOATENCION<>2 and a.STRESTADOATENCION<>3 and a.STRESTADOATENCION<>4 and a.strfechareserva='" + objparametros.strfechareserva + "') order by s.ORDEN";
 
             return await _dbconnection.QueryAsync<Models_Ocupacion>(sql, new { });
@@ -65,7 +65,7 @@ namespace Repositorio
         public async Task<IEnumerable<ModelsCancelaciones>> GetAllConsultaHorariosReservados(Models_Parametros objparametros)
         {
             var sql = @"SELECT t1.strfechareserva,T3.ORDEN,t3.strhorario,t1.strcodigoreserva,t4.STRNOMBREASESOR as STRASESOR,T5.STRLUGARATENCION STRSEDE
-                        FROM table_asesor_horario T1 LEFT JOIN table_CLIENTES_TURNOS T2 ON T1.strcedulacliente=t2.strcedula 
+                        FROM TABLE_ASESOR_HORARIO T1 LEFT JOIN table_CLIENTES_TURNOS T2 ON T1.strcedulacliente=t2.strcedula 
                         AND t2.stremail= '" + objparametros.stremail + "' INNER JOIN TABLE_HORARIOS T3 ON t3.strcodigohorario=t1.strcodigohorario INNER JOIN table_asesor T4 ON t4.strcodigoasesor=t1.strcodigoasesor INNER JOIN table_lugar_atencion T5 ON t5.strcodigo=t1.strcodigolugaratencion WHERE t1.STRESTADOATENCION=1 and t1.strcedulacliente= '" + objparametros.strcodigoasesor + "' and t1.strfechareserva >= '" + objparametros.strfechareserva + "' ORDER BY t1.strfechareserva,T3.ORDEN";
 
             return await _dbconnection.QueryAsync<ModelsCancelaciones>(sql, new { });
@@ -74,7 +74,7 @@ namespace Repositorio
         public async Task<IEnumerable<ModelsCancelaciones>> GetAllConsultaServicioCliente()
         {
             var sql = @"SELECT t1.strfechareserva,T3.ORDEN,t3.strhorario,t1.strcodigoreserva,t4.STRNOMBREASESOR as STRASESOR,T5.STRLUGARATENCION STRSEDE
-                         FROM table_asesor_horario T1 LEFT JOIN table_CLIENTES_TURNOS T2 ON T1.strcedulacliente=t2.strcedula 
+                         FROM TABLE_ASESOR_HORARIO T1 LEFT JOIN table_CLIENTES_TURNOS T2 ON T1.strcedulacliente=t2.strcedula 
                          INNER JOIN TABLE_HORARIOS T3 ON t3.strcodigohorario=t1.strcodigohorario 
                          INNER JOIN table_asesor T4 ON t4.strcodigoasesor=t1.strcodigoasesor 
                          INNER JOIN table_lugar_atencion T5 ON t5.strcodigo=t1.strcodigolugaratencion

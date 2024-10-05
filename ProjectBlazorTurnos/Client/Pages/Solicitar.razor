@@ -1,4 +1,4 @@
-﻿@page "/Solicitar"
+﻿@page "/CrearCliente"
 
 @inject IgrabarClienteServicio grabarClienteServicio
 @inject IlistaServicio ListaServicio
@@ -12,7 +12,6 @@
 
 @*    <DataAnnotationsValidator />
     <ValidationSummary />*@
-
 <div class="card">
     <div class="card-body">
         <div class="container">
@@ -23,103 +22,87 @@
                     </font>
                 </legend>
 
-                <div class="row">
-                    <div class="col-md-12">
-
-                        <div class="col-md-12 mb-3">
+                <div class="row width-15">
+                    <div class="col-md-6">
+                        <div class="col-md-6 col-mb-3">
                             <FieldLabel><font color="red">(*)</font>Tipo de Persona</FieldLabel>
-
                             <select @bind="@Models_Clientes_Turno.STRCODIGOTIPOPERSONA" class="custom-select" title="Seleccion es requerida" required>
-                                <option value="Select">Selecione un tipo de Persona</option>
+                                <option value="Select">Tipo de Persona</option>
 
-                                @if (ModelsTipoPersonas != null && ModelsTipoPersonas.Count > 0)
-                                {
-
-                                    @foreach (var dato in ModelsTipoPersonas)
-                                    {
+                                @if (ModelsTipoPersonas != null && ModelsTipoPersonas.Count > 0){ 
+                                    @foreach (var dato in ModelsTipoPersonas) {
                                         <option value="@dato.STRCODIGO"> @dato.STRTIPOPERSONA</option>
                                     }
                                 }
                             </select>
-
                             @*<ValidationMessage For="@(() => Models_Clientes_Turno.STRCODIGOTIPOPERSONA)" />*@
-
                         </div>
-
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 col-mb-3">
                             <FieldLabel><font color="red">(*)</font>Tipo de Documento</FieldLabel>
-
                             <select @bind="@Models_Clientes_Turno.STRCODIGOTIPODOCUMENTO" class="custom-select" title="Seleccion es requerida" required>
-                                <option value="Select">Selecione un tipo de Documento</option>
+                                <option value="Select">Tipo de Documento</option>
 
-                                @if (ModelsTipoDocumentos != null && ModelsTipoDocumentos.Count > 0)
-                                {
-
-                                    @foreach (var dato in ModelsTipoDocumentos)
-                                    {
+                                @if (ModelsTipoDocumentos != null && ModelsTipoDocumentos.Count > 0){
+                                    @foreach (var dato in ModelsTipoDocumentos){
                                         <option value="@dato.STRCODIGO"> @dato.STRTIPODOCUMENTO</option>
                                     }
                                 }
-
                             </select>
                             @*<ValidationMessage For="@(() => Models_Clientes_Turno.STRCODIGOTIPODOCUMENTO)" />*@
-
                         </div>
-
-                        <div class="col-md-12 mb-3">
-                            <FieldLabel><font color="red">(*)</font>Numero de Documento</FieldLabel>
+                        <div class="col-md-6 col-mb-3">
+                            <FieldLabel><font color="red">(*)</font>Número de Documento</FieldLabel>
                             <RadzenTextBox @bind-Value="@Models_Clientes_Turno.STRCEDULA" Style="width: 100%" Placeholder="Digite numero de identificacion" MaxLength="30" class="form-control" type="number" required />
                             @*  <ValidationMessage For="@(() => Models_Clientes_Turno.STRCEDULA)" />*@
                             @* <RadzenTextBox class="form-control" @bind-Value="@contact.FIRTSNAME">
                             </RadzenTextBox>*@
                         </div>
-
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 col-mb-3">
                             <FieldLabel><font color="red">(*)</font>Nombres</FieldLabel>
                             <RadzenTextBox @bind-Value="@Models_Clientes_Turno.STRNOMBRES" Placeholder="Digite sus nombres" MaxLength="200" class="form-control" required />
                             @*<ValidationMessage For="@(() => Models_Clientes_Turno.STRNOMBRES)" />*@
                         </div>
-
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 col-mb-3">
                             <FieldLabel><font color="red">(*)</font>Apellidos</FieldLabel>
                             <RadzenTextBox @bind-Value="@Models_Clientes_Turno.STRAPELLIDOS" Placeholder="Digite los apellidos" MaxLength="200" class="form-control" required />
                             @*<ValidationMessage For="@(() => Models_Clientes_Turno.STRAPELLIDOS)" />*@
                         </div>
-
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 col-mb-3">
                             <FieldLabel><font color="red">(*)</font>Telefono Fijo</FieldLabel>
                             <RadzenTextBox @bind-Value="@Models_Clientes_Turno.STRTELEFONOFIJO" Placeholder="Digite Telefono Fijo" MaxLength="30" class="form-control" type="number" required />
                             @* <ValidationMessage For="@(() => Models_Clientes_Turno.STRTELEFONOFIJO)" />*@
                         </div>
-
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 col-mb-3">
                             <FieldLabel><font color="red">(*)</font>Telefono Celular</FieldLabel>
                             <RadzenTextBox @bind-Value="@Models_Clientes_Turno.STRTELEFONOCELULAR" Placeholder="Digite Telefono Celular" MaxLength="30" class="form-control" type="number" required />
                             @*<ValidationMessage For="@(() => Models_Clientes_Turno.STRTELEFONOCELULAR)" />*@
                         </div>
-
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 col-mb-3">
                             <FieldLabel><font color="red">(*)</font>Correo Electronico</FieldLabel>
                             <RadzenTextBox @bind-Value="@Models_Clientes_Turno.STREMAIL" type="email" Placeholder="Digite Correo Electronico" MaxLength="200" class="form-control" required />
                             @* <ValidationMessage For="@(() => Models_Clientes_Turno.STREMAIL)" />*@
                         </div>
-
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 col-mb-3">
                             <Check TValue="bool" Checked="@rememberMe" CheckedChanged="@Activacion">
                                 Consciento que mis datos personales sean transferidos en los términos que señalan el presente aviso de privacidad
                             </Check>
                         </div>
-
                         <div class="row justify-content-center">
-                            <div class="col-md-5 mb-3">
-                                @*<button type="submit" class="btn btn-success">Submit</button>*@
-                                <RadzenButton Click="@(args => DropDownChanged())" data-toggle="tooltip" title="Retorna a la pagina anterior" class="btn btn-primary" Style="background:orange" Text="Retornar" ButtonStyle="ButtonStyle.Primary" />
+                            <div class="col-md-6 col-mb-3">
+                                @*<button type="submit" class="btn btn-success">Submit</button> *@
+                                <RadzenButton Click="@(args => DropDownChanged())" data-toggle="tooltip" title="Retorna a la pagina anterior" class="btn btn-primary" Style="background:orange" Text="Regresar" ButtonStyle="ButtonStyle.Primary" />
                             </div>
-                        </div>
-
+                            <div class="col-md-6 col-mb-3">
+                                @* <button type="submit" class="btn btn-success">Submit</button> *@
+                                <RadzenButton Click="@(args => Aceptar())" data-toggle="tooltip" title="GuardarBD" class="btn btn-primary" Style="background:orange" Text="Guardar" ButtonStyle="ButtonStyle.Primary" />
+                            </div>
+                        </div> 
                     </div>
                 </div>
-
+            </fieldset>
+        </div>
+    </div>
+</div>
                 @*
                 <div class="col-md-4">
                 </div>*@
@@ -129,10 +112,6 @@
 
                 @*<RadzenDropDown TValue="string" Data=@(customers.Select(c => c.CompanyName).Distinct()) Change="@OnChange" />*@
 
-            </fieldset>
-        </div>
-    </div>
-</div>
 
 <Modal @ref="modalRef">
     <ModalContent Size="ModalSize.Large" Centered="true" Scrollable="true">
@@ -176,7 +155,7 @@
         </ModalBody>
         <ModalFooter>
             @*<button type="submit" class="btn btn-success">Submit</button>*@
-            <Button Color="Color.Primary" Clicked="@Aceptar">Aceptar Habeas Data</Button>
+            <Button Color="Color.Primary" Clicked="@NoAceptar">Aceptar Habeas Data</Button>
             <Button Color="Color.Secondary" Clicked="@NoAceptar">No Aceptar Habeas Data</Button>
         </ModalFooter>
     </ModalContent>
@@ -211,6 +190,7 @@
 
     private Models_Clientes_Turnos? Models_Clientes_Turno;
 
+    List<Models_Clientes_Turnos>? ModelsClienesTurnos; 
     List<ModelsTipoPersona>? ModelsTipoPersonas;
     List<ModelsTipoDocumento>? ModelsTipoDocumentos;
 
@@ -240,7 +220,7 @@
 
             throw;
         }
-        
+
     }
 
     private void Activacion(bool value)
@@ -334,10 +314,10 @@
     }
 
     protected async Task Aceptar()
-    {    
-
+    {
         await grabarClienteServicio.InsertClientes(Models_Clientes_Turno);
 
+        //Este médoto muestra los datos en la barra del navegador
         NavigationManager.NavigateTo($"/Calendario/{Models_Clientes_Turno.STRCEDULA}/{Models_Clientes_Turno.STREMAIL}");
     }
 
