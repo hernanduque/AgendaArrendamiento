@@ -13,13 +13,13 @@ namespace ProjectBlazorTurnos.Server.Service
         {
             _emailConfig = emailConfig;
         }
-        public async Task SendEmail(string fecha, string strhorareserva, string StrSede, string nombreasesor, string stremailcliente,string STRCODIGORESERVA)
+        public async Task SendEmail(string fecha, string horareserva, string Sede, string nombreasesor, string emailcliente,string codigoreserva)
         {
             try
             {
                 //var configurationValue = ConfigurationManager.AppSettings["ConfigurationSettingName"];
 
-                MailAddress to = new MailAddress(stremailcliente);
+                MailAddress to = new MailAddress(emailcliente);
                 MailAddress from = new MailAddress(_emailConfig.From, "Solicitud Reservas Citas PQRS Emvarias");
                 using (MailMessage mm = new MailMessage(from, to))
                 {
@@ -27,7 +27,7 @@ namespace ProjectBlazorTurnos.Server.Service
                     MailAddress copy = new MailAddress(_emailConfig.cc);
                     mm.CC.Add(copy);
                     mm.Subject = "Solicitud Reservas Citas PQRS Emvarias";
-                    mm.Body = HttpUtility.HtmlDecode("Señor Usuario Recuerde estar 15 Minutos antes:  <br /><br />  *Fecha de la Reserva: " + @fecha + "<br /> *Hora de la Reserva:  " + @strhorareserva + "<br /> *Lugar de la Reserva: " + @StrSede + "<br /> *Asesor: " + @nombreasesor + "<br /> *CodigoReserva: " + @STRCODIGORESERVA + "<br /><br /> Gracias por usar nuestros servicios. <br /><br />");
+                    mm.Body = HttpUtility.HtmlDecode("Señor Usuario Recuerde estar 15 Minutos antes:  <br /><br />  *Fecha de la Reserva: " + @fecha + "<br /> *Hora de la Reserva:  " + @horareserva + "<br /> *Lugar de la Reserva: " + @Sede + "<br /> *Asesor: " + @nombreasesor + "<br /> *CodigoReserva: " + @codigoreserva + "<br /><br /> Gracias por usar nuestros servicios. <br /><br />");
                     mm.IsBodyHtml= true;                       
 
                     SmtpClient smtp = new SmtpClient();

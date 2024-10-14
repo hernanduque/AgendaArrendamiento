@@ -2,7 +2,7 @@
 {
     public interface IEmailSender
     {
-        Task SendEmail(string fecha, string strhorareserva, string StrSede, string nombreasesor, string stremailcliente, string STRCODIGORESERVA);
+        Task SendEmail(string fecha, string horareserva, string Sede, string nombreasesor, string emailcliente, string codigoreserva);
 
     }
 }

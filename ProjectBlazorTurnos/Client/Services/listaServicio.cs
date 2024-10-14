@@ -39,8 +39,8 @@ namespace ProjectBlazorTurnos.Client.Services
             try
             {
                 var urlParams = new Dictionary<string, string>{
-                { "CodigoAsesor", objparametros.strcodigoasesor },
-                { "FechaSolicitud", objparametros.strfechareserva }
+                { "strcodigoasesor", objparametros.strcodigoasesor },
+                { "strfechasolicitud", objparametros.strfechareserva }
             };
                 var encodedParams = new FormUrlEncodedContent(urlParams);
                 var paramText = await encodedParams.ReadAsStringAsync();
@@ -61,9 +61,9 @@ namespace ProjectBlazorTurnos.Client.Services
             try
             {
                 var urlParams = new Dictionary<string, string>{
-                { "CodigoAsesor", objparametros.strcodigoasesor },
-                { "FechaSolicitud", objparametros.strfechareserva },
-                { "Email", objparametros.stremail }
+                { "strcodigoasesor", objparametros.strcodigoasesor },
+                { "strfechasolicitud", objparametros.strfechareserva },
+                { "stremail", objparametros.stremail }
             };
                 var encodedParams = new FormUrlEncodedContent(urlParams);
                 var paramText = await encodedParams.ReadAsStringAsync();
@@ -99,8 +99,8 @@ namespace ProjectBlazorTurnos.Client.Services
             try
             {
                 var urlParams = new Dictionary<string, string>{
-                { "CodigoAsesor", objparametros.strcodigoasesor },
-                { "Email", objparametros.stremail }
+                { "strcodigoasesor", objparametros.strcodigoasesor },
+                { "stremail", objparametros.stremail }
             };
                 var encodedParams = new FormUrlEncodedContent(urlParams);
                 var paramText = await encodedParams.ReadAsStringAsync();

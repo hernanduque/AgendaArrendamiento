@@ -5,6 +5,55 @@
 
 <PageTitle>STDEAGENDA</PageTitle>
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light flex-column flex-sm-row">
+    <div class="dropdown collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item inactive">
+                <a class="btn btn-secondary letra dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                    Menú
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#"><RadzenButton Click="@(args => CrearCliente())" title="En esta opción podrás crear un cliente" class="btn btn-light  dropdown-item letra" Text="Clientes" /></a>
+                    <a class="dropdown-item" href="#"><RadzenButton Click="@(args => ConsultarCliente())" title="En esta opción podrás crear un cliente" class="btn btn-light  dropdown-item letra" Text="Asesores" /></a>
+                    <a class="dropdown-item" href="#"><RadzenButton Click="@(args => EliminarCliente())" title="En esta opción podrás crear un cliente" class="btn btn-light  dropdown-item letra" Text="Ubicaciones" /></a>
+                </div>
+            </li>
+            
+           
+            <li class="form-inline">
+                <div class="titulo">SISTEMA DE AGENDAMIENTO VIRTUAL PARA ARRENDAR APARTAMENTO</div>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+    
+</nav>
+
+<style>
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .letra {
+        font-family: Arial;
+        color: dimgray;
+        text-transform: uppercase;
+    }
+
+    .titulo {
+        font-family: Arial;
+        display: flex;
+        justify-content: center;
+        margin-left: 200px;
+        color: dimgray;
+    }
+</style>
 
 <div class="text-center">
     <img width="400" height="400" src="Apartamentos.jpg" class="img-responsive img-rounded img-thumbnail" alt="" style="border:none">
@@ -32,11 +81,47 @@
 
 <div class="row justify-content-center">
     <div class="col-md-5 mb-3">
-        <RadzenButton Click="@(args => CrearCliente())" data-toggle="tooltip" title="Con esta opción agregarás un cliente" class="btn btn-primary" Style="background:orange" Text="Agregar Cliente" ButtonStyle="ButtonStyle.Primary" />
+        <RadzenButton Click="@(args => CrearCliente())" data-toggle="tooltip" title="..." class="btn btn-primary" Style="background:orange" Text="..." ButtonStyle="ButtonStyle.Primary" />
         <RadzenButton Click="@(args => NavigateCancelar())" data-toggle="tooltip" title="Esta opcion te permite cancelaro Consultar una cita que hallas solicitado" class="btn btn-primary" Style="background:orange" Text="Cancelar o Consultar Cita" ButtonStyle="ButtonStyle.Primary" />
         @*<RadzenButton Click="@(args => NavigateConsultar())" data-toggle="tooltip" title="Esta opcion te permite consultar tus citas vigentes" class="btn btn-primary" Style="background:orange" Text="Consultar Citas" ButtonStyle="ButtonStyle.Primary" />*@
     </div>
 </div>
+
+@code {
+
+    private Modal? modalRef = null!;
+
+    private void Solicitar()
+    {
+        NavigationManager.NavigateTo("/Solicitar");
+    }
+
+    private void CrearCliente()
+    {
+        //modalRef.Show();
+        NavigationManager.NavigateTo("/CrearCliente");
+    }
+
+    private void NavigateCancelar()
+    {
+        //modalRef.Show();
+        NavigationManager.NavigateTo("/CrearCliente");
+    }
+
+    
+    private void ConsultarCliente()
+    {
+        //modalRef.Show();
+        NavigationManager.NavigateTo("/CrearCliente");
+    }
+
+    private void EliminarCliente()
+    {
+        //modalRef.Show();
+        NavigationManager.NavigateTo("/CrearCliente");
+    }
+}
+
 
 <Modal @ref="modalRef">
     <ModalContent Size="ModalSize.Large" Centered="true">
@@ -74,28 +159,3 @@
 </Modal>
 
 
-@code {
-
-    private Modal? modalRef = null!;
-
-     private void Solicitar()
-    {
-        NavigationManager.NavigateTo("/Solicitar");
-    }
-
-    private void CrearCliente()
-    {
-        //modalRef.Show();
-        NavigationManager.NavigateTo("/CrearCliente");
-    }
-
-    private void NavigateCancelar()
-    {
-        NavigationManager.NavigateTo("/Cancelar");
-    }
-
-    private void NavigateConsultar()
-    {
-        NavigationManager.NavigateTo("/Consultar");
-    }
-}

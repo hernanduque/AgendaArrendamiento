@@ -43,13 +43,13 @@ namespace ProjectBlazorTurnos.Server.Controllers
 
        
         [HttpGet("GetAllLOCUPACION")]
-        public async Task<IEnumerable<Models_Ocupacion>> GetAllLOCUPACION([FromQuery(Name = "CodigoAsesor")] string strcodigoasesor, [FromQuery(Name = "FechaSolicitud")] string strfechareserva)
+        public async Task<IEnumerable<Models_Ocupacion>> GetAllLOCUPACION([FromQuery(Name = "strcodigoasesor")] string strcodigoasesor, [FromQuery(Name = "strfechasolicitud")] string strfechareserva)
         {
             return await _IListasRepositorio.GetAllLOCUPACION(new Models_Parametros() { strcodigoasesor= strcodigoasesor,strfechareserva= strfechareserva });
         }
 
         [HttpGet("GetAllConsultaHorariosReservados")]
-        public async Task<IEnumerable<ModelsCancelaciones>> GetAllConsultaHorariosReservados([FromQuery(Name = "CodigoAsesor")] string strcodigoasesor, [FromQuery(Name = "FechaSolicitud")] string strfechareserva, [FromQuery(Name = "Email")] string stremail)
+        public async Task<IEnumerable<ModelsCancelaciones>> GetAllConsultaHorariosReservados([FromQuery(Name = "strcodigoasesor")] string strcodigoasesor, [FromQuery(Name = "strfechasolicitud")] string strfechareserva, [FromQuery(Name = "stremail")] string stremail)
         {
             return await _IListasRepositorio.GetAllConsultaHorariosReservados(new Models_Parametros() { strcodigoasesor = strcodigoasesor, strfechareserva = strfechareserva, stremail= stremail });
         }
@@ -61,7 +61,7 @@ namespace ProjectBlazorTurnos.Server.Controllers
         }
 
         [HttpGet("GetUser")]
-        public async Task<IEnumerable<ModelsValidacionCliente>> GetUser([FromQuery(Name = "CodigoAsesor")] string strcodigoasesor, [FromQuery(Name = "Email")] string stremail)
+        public async Task<IEnumerable<ModelsValidacionCliente>> GetUser([FromQuery(Name = "strcodigoasesor")] string strcodigoasesor, [FromQuery(Name = "stremail")] string stremail)
         {
             return await _IListasRepositorio.GetUser(new Models_Parametros() { strcodigoasesor = strcodigoasesor, stremail = stremail });
         }

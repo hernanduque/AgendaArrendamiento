@@ -2,6 +2,6 @@
 {
     public interface IEmailSenderCancel
     {
-        Task SendEmail(string STRCODIGORESERVA, string? STREMAIL);
+        Task SendEmail(string codigoreserva, string? stremail);
     }
 }
